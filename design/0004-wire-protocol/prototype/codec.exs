@@ -21,9 +21,14 @@ defmodule Ockam.Wire do
       1 -> Ockam.Wire.V1.decode_message(rest)
     end
   end
+
+  def encode_message(message), do: Ockam.Wire.V1.encode_message(message)
 end
 
 defmodule Ockam.Wire.V1 do
+
+  def encode_message(%Ockam.Message.Ping{}), do: <<1, 0>>
+  def encode_message(%Ockam.Message.Pong{}), do: <<1, 1>>
 
   def decode_length_prefixed(message_and_rest) do
     {length, data_and_rest} = Ockam.Wire.decode_varint_u2le(message_and_rest)
@@ -63,9 +68,3 @@ defmodule Ockam.Wire.V1 do
   end
 
 end
-
-# test cases
-IO.inspect Ockam.Wire.decode_message(<<1, 0>>) # ping
-IO.inspect Ockam.Wire.decode_message(<<1, 1>>) # pong
-IO.inspect Ockam.Wire.decode_message(<<1, 2, 2, 100, 100>>) # payload
-IO.inspect Ockam.Wire.decode_message(<<1, 3, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>>) # payload_aead_aes_gcm
