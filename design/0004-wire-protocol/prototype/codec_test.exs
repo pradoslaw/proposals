@@ -13,6 +13,12 @@ defmodule Test do
     {%Ockam.Message.Payload{}, <<>>} = Ockam.Wire.decode_message(<<1, 2, 2, 100, 100>>)
     {%Ockam.Message.Payload.AuthenticatedEncrypted{}, <<>>} =
       Ockam.Wire.decode_message(<<1, 3, 17, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>>)
+    {%Ockam.Message.KeyAgreement.T1.M1{}, <<>>} =
+      Ockam.Wire.decode_message(<<1, 4, 33, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>>)
+    {%Ockam.Message.KeyAgreement.T1.M1{}, <<>>} =
+      Ockam.Wire.decode_message(<<1, 5, 33, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>>)
+    {%Ockam.Message.KeyAgreement.T1.M1{}, <<>>} =
+      Ockam.Wire.decode_message(<<1, 6, 33, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>>)
   end
 
 end

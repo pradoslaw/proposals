@@ -9,7 +9,7 @@ defmodule Router do
 
   @impl true
   def init(init_args) do
-    {:ok, Map.put_new(init_args, :routing_table, %{})}
+    {:ok, Map.put_new(init_args, :routes, %{})}
   end
 
   @impl true
@@ -19,15 +19,15 @@ defmodule Router do
 
   @impl true
   def handle_info({:register_route, destination, route}, state) do
-    routing_table = Map.put(state.routing_table, destination, route)
-    {:noreply, %{state | routing_table: routing_table}}
+    routes = Map.put(state.routes, destination, route)
+    {:noreply, %{state | routes: routes}}
   end
 
   @impl true
   def handle_info(m = {:send, destination, message}, state) do
     IO.puts "#{inspect(state.name)}: #{inspect(m)}"
 
-    route = Map.get(state.routing_table, destination)
+    route = Map.get(state.routes, destination)
     if route do
       {:send, next_hop, next_hop_message} = prepare_routed_message({:send, destination, message}, Enum.reverse(route))
       send(next_hop, next_hop_message)
@@ -71,7 +71,7 @@ defmodule A do
   end
   @impl true
   def init(init_args) do
-    {:ok, Map.put_new(init_args, :routing_table, %{})}
+    {:ok, Map.put_new(init_args, :routes, %{})}
   end
 
   @impl true
@@ -81,15 +81,15 @@ defmodule A do
 
   @impl true
   def handle_info({:register_route, destination, route}, state) do
-    routing_table = Map.put(state.routing_table, destination, route)
-    {:noreply, %{state | routing_table: routing_table}}
+    routes = Map.put(state.routes, destination, route)
+    {:noreply, %{state | routes: routes}}
   end
 
   @impl true
   def handle_info(m = {:send, destination, message}, state) do
     IO.puts "#{inspect(state.name)}: #{inspect(m)}"
 
-    route = Map.get(state.routing_table, destination)
+    route = Map.get(state.routes, destination)
     if route do
       {:send, next_hop, next_hop_message} = prepare_routed_message({:send, destination, message}, Enum.reverse(route))
       send(next_hop, next_hop_message)
@@ -118,11 +118,13 @@ defmodule ARB do
     {:ok, _} = B.start(%{})
 
     {:ok, _} = A.start(%{
-      routing_table: %{
+      routes: %{
         B => [R1, R2, R3, R4, R5]
       }
     })
 
     send A, {:send, B, Ockam.Wire.encode_message(%Ockam.Message.Ping{})}
+
+    :ok
   end
 end
