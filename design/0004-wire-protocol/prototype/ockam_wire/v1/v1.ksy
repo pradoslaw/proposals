@@ -3,28 +3,14 @@ meta:
   id: v1
   title: Ockam Wire V1
   imports:
-    - ping
-    - pong
-    - payload
-    - payload_aead_aes_gcm
-    - key_agreement_t1_m1
-    - key_agreement_t1_m2
-    - key_agreement_t1_m3
+    - header
+    - body
 
 seq:
-  - id: type
-    type: u1
+  - id: headers
+    type: header
+    repeat: until
+    repeat-until: _.type == 255
 
   - id: body
-    type:
-      switch-on: type
-      cases:
-         0: ping
-         1: pong
-
-         2: payload
-         3: payload_aead_aes_gcm
-
-         4: key_agreement_t1_m1
-         5: key_agreement_t1_m2
-         6: key_agreement_t1_m3
+    type: body

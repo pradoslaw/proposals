@@ -38,27 +38,27 @@ types:
   tcp_endpoint_ipv4:
     seq:
       - id: ip
-        type: u4
+        type: u4le
       - id: port
-        type: u2
+        type: u2le
 
   tcp_endpoint_ipv6:
     seq:
       - id: ip
         size: 16 # variable length encode this?
       - id: port
-        type: u2
+        type: u2le
 
   udp_endpoint_ipv4:
     seq:
       - id: ip
-        type: u4
+        type: u4le
       - id: port
-        type: u2
+        type: u2le
 
   udp_endpoint_ipv6:
     seq:
       - id: ip
         size: 16 # variable length encode this?
       - id: port
-        type: u2
+        type: u2le

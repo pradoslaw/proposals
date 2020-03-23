@@ -11,9 +11,12 @@ defmodule Ockam.Wire do
   use Bitwise
 
   def decode_varint_u2le(<<0::1, b1::unsigned-integer-7, rest::binary>>), do: {b1, rest}
-  def decode_varint_u2le(<<1::1, b1::unsigned-integer-7, _::1, b2::unsigned-integer-7, rest::binary>>) do
-    {b1 + (b2 <<< 7), rest}
-  end
+  def decode_varint_u2le(<<1::1, b1::unsigned-integer-7, 0::1, b2::unsigned-integer-7, rest::binary>>), do:
+    {(b2 <<< 7) + b1, rest}
+
+  def encode_varint_u2le(i) when i >= 0   and i < 128,   do: <<0::1, i::unsigned-integer-7>>
+  def encode_varint_u2le(i) when i >= 128 and i < 16384, do:
+    <<1::1,  (i &&& 0b01111111)::unsigned-integer-7, 0::1, ((i >>> 7) &&& 0b01111111)::unsigned-integer-7>>
 
   def decode_message(message) do
     {version, rest} = decode_varint_u2le(message)
