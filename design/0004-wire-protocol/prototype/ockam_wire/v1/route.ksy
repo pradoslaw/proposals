@@ -5,6 +5,8 @@ meta:
     - endpoint
 
 seq:
+  - id: count_endpoints
+    type: u1
   - id: endpoints
     type: endpoint
-    repeat: eos
+    repeat: count_endpoints
